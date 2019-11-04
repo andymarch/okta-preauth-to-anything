@@ -3,12 +3,17 @@ const express = require('express')
 const axios = require('axios')
 const bodyParser = require('body-parser')
 const okta = require('@okta/okta-sdk-nodejs');
+var cors = require('cors');
 const router = express.Router();
 
 app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cors({
+    origin: 'https://account.examplydev.co.uk'
+  }));
 
 const client = new okta.Client({
   orgUrl: process.env.TENANT,
