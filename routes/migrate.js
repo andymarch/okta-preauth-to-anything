@@ -19,7 +19,9 @@ router.post("/", async function(req,res) {
                 //this first.
                 var userinfo = await axios.get(process.env.TENANT+'api/v1/users/'+user);
                 
-                await axios.post(process.env.TENANT+'api/v1/users/'+userinfo.id,{
+                console.log("id "+userinfo.data.id)
+                
+                await axios.post(process.env.TENANT+'api/v1/users/'+userinfo.data.id,{
                     "credentials":{
                         "password" : {
                             "value": pwd
@@ -28,7 +30,7 @@ router.post("/", async function(req,res) {
                 });
                 await axios.delete(process.env.TENANT + 
                     '/api/v1/groups/' + process.env.MIGRATION_GROUP_ID + 
-                    '/users/' + userinfo.id)
+                    '/users/' + userinfo.data.id)
 
                 res.status(200).json({validation: 'passed', migration: 'passed'})
             } catch (error) {
