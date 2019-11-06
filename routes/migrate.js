@@ -1,9 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const axios = require('axios');
+const express = require('express')
+const router = express.Router()
+const axios = require('axios')
 
 module.exports = function (_client){
-  client = _client;
+  client = _client
 
 
 router.post("/", async function(req,res) {
@@ -11,13 +11,13 @@ router.post("/", async function(req,res) {
         let user = req.body.id
         let pwd = req.body.pwd
 
-        if(validateCredentials(user,pwd)){
+        if(await validateCredentials(user,pwd)){
             //set the password correctly in Okta
             try{
                 //we can't use the user's login for the group call it must be the
                 //user's id so we need to add the call to the users endpoint for
                 //this first.
-                var userinfo = await axios.get(process.env.TENANT+'api/v1/users/'+user);
+                var userinfo = await axios.get(process.env.TENANT+'api/v1/users/'+user)
                 
                 await axios.post(process.env.TENANT+'api/v1/users/'+userinfo.data.id,{
                     "credentials":{
@@ -52,7 +52,8 @@ async function validateCredentials(userid, password){
     //legacy service. This method should return true only if the credentials are
     //validated, false in all other cases. Consider a circuit breaker here for
     //timeouts.
+    return true
 }
 
-return router;
+return router
 }
