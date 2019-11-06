@@ -27,8 +27,8 @@ app.use(cors({
 
 axios.defaults.headers.common['Authorization'] = `SSWS `+process.env.TOKEN
 
-var preAuthRouter = require('./routes/preAuth')
-var migrateRouter = require('./routes/migrate')
+var preAuthRouter = require('./routes/preAuth')()
+var migrateRouter = require('./routes/migrate')()
 app.use('/preAuth', preAuthRouter)
 app.use('/migrate', migrateRouter)
 
