@@ -2,9 +2,7 @@ const express = require('express')
 const router = express.Router()
 const axios = require('axios')
 
-module.exports = function (_client){
-  client = _client
-
+module.exports = function (){
 
 router.post("/", async function(req,res) {
     try{
