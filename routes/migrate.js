@@ -14,13 +14,22 @@ router.post("/", async function(req,res) {
         if(validateCredentials(user,pwd)){
             //set the password correctly in Okta
             try{
-                await axios.post(process.env.TENANT+'api/v1/users/'+user,{
+                //we can't use the user's login for the group call it must be the
+                //user's id so we need to add the call to the users endpoint for
+                //this first.
+                var userinfo = await axios.get(process.env.TENANT+'api/v1/users/'+user);
+                
+                await axios.post(process.env.TENANT+'api/v1/users/'+userinfo.id,{
                     "credentials":{
                         "password" : {
                             "value": pwd
                         }
                     }
                 });
+                await axios.delete(process.env.TENANT + 
+                    '/api/v1/groups/' + process.env.MIGRATION_GROUP_ID + 
+                    '/users/' + userinfo.id)
+
                 res.status(200).json({validation: 'passed', migration: 'passed'})
             } catch (error) {
                 //This handles validation failure at Okta (i.e. password policy
