@@ -4,23 +4,32 @@ const axios = require('axios')
 const bodyParser = require('body-parser')
 const okta = require('@okta/okta-sdk-nodejs');
 var cors = require('cors');
-const router = express.Router();
 
 app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+var allowedOrigins = process.env.CORS_WHITELIST.split(' ')
 app.use(cors({
-    origin: 'https://account.examplydev.co.uk'
-  }));
+  origin: function(origin, callback){    
+    // allow requests with no origin (like mobile apps or curl requests)
+    if(!origin) return callback(null, true);
+    
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    
+    return callback(null, true);
+  }
+}));
 
 const client = new okta.Client({
   orgUrl: process.env.TENANT,
   token: process.env.TOKEN 
 });
-
-console.log(process.env.TOKEN)
 
 axios.defaults.headers.common['Authorization'] = `SSWS `+process.env.TOKEN
 

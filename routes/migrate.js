@@ -19,8 +19,6 @@ router.post("/", async function(req,res) {
                 //this first.
                 var userinfo = await axios.get(process.env.TENANT+'api/v1/users/'+user);
                 
-                console.log("id "+userinfo.data.id)
-                
                 await axios.post(process.env.TENANT+'api/v1/users/'+userinfo.data.id,{
                     "credentials":{
                         "password" : {
